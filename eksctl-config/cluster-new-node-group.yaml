@@ -5,7 +5,7 @@ kind: ClusterConfig
 metadata:
   name: eks-cluster-capstone # name of cluster
   region: us-east-1
-  version: "1.22" # kubernetes version
+  version: "1.21" # kubernetes version
 vpc: # Refer: https://github.com/weaveworks/eksctl/blob/main/examples/04-existing-vpc.yaml
   id: "vpc-xxxxxxxxxxxxxxxxx"
   subnets:

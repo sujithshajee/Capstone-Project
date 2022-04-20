@@ -1,11 +1,31 @@
 ## Introduction
 - The Tasks and corresponding subtasks have been completed with the combination of Terraform and Anisble. 
     
-## Scripts
+## Scripts and folders
 - Terraform Scripts
+    ec2-instance.tf
+    ecr.tf
+    keypair.tf
+    output.tf
+    provider.tf
+    s3.tf
+    security-group.tf
+    vars.tf
+    vpc.tf
+
+- addons
+
+- screenshots
+
+- scripts
+
+- upg-loadme-app
+
+- upg-loadme-manifests
 
 
-## Task 0: Environment Setup and  Task 1: Setup EKS Cluster 
+
+## Task 0: Environment Setup &  Task 1: Setup EKS Cluster 
 ```
 * Ensure you have the vars.tf file updated with required variables
 * Ensure you have AWS_ACCESS_KEY and AWS_SECRET_KEY updated in the default values or be ready to provide them when you run the script
@@ -15,9 +35,6 @@
     terraform plan 
     terraform apply
 
-* Run below command to Destroy infrastructure
-    terraform destroy && rm -rf terraform-key.pem
-
 Note the output variables at the end of the script execution
 ```
 
@@ -26,7 +43,7 @@ Note the output variables at the end of the script execution
     ssh -i terraform-key.pem ubuntu@<<public ip>>
     run 'aws configure' and follow prompts to complete configuration
     Clone git repo
-        git clone <<add URL>>
+        git clone https://github.com/sujithshajee/Capstone-Project.git
 ```
 
 ```
@@ -74,3 +91,10 @@ Note the output variables at the end of the script execution
     Run command 'eksctl create cluster -f cluster-new-node-group.yaml' and wait for the node group creation to be complete
 * Create demo namespace by using command 'kubectl create ns demo'
 ```    
+
+
+## To destroy the setup run below commands
+```  
+    eksctl delete cluster eks-cluster-capstone
+    terraform destroy && rm -rf terraform-key.pem
+```  
