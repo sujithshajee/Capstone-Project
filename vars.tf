@@ -47,8 +47,3 @@ variable "CIDR_BLOCK" {
     subnet_private_two = "10.50.4.0/24"
   }
 }
-
-
-variable "EKS_VERSION" {
-  default = "1.23"
-}

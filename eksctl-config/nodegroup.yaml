@@ -65,37 +65,12 @@ iam: # Refer: https://eksctl.io/usage/iamserviceaccounts/
       autoScaler: true
 
 nodeGroups: # Refer: https://github.com/weaveworks/eksctl/blob/main/examples/05-advanced-nodegroups.yaml
-  - name: pvt-nodegroup-capstone-a-1
-    labels: { role: workers }
-    tags:
-      k8s.io/cluster-autoscaler/enabled: "true" # tag is needed for cluster autoscaler. Refer: https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md#auto-discovery-setup
-      k8s.io/cluster-autoscaler/eks-cluster-capstone: "shared" # cluster name tag is optional in latest versions of EKS
-    instancesDistribution:
-      instanceTypes:
-        - t2.medium
-    desiredCapacity: 1
-    minSize: 0
-    maxSize: 3
-    privateNetworking: true # include only in private subnet
-    subnets:
-      - private-net-captsone-a # 1 AZ is enough for testing
-  - name: pub-nodegroup-capstone-a-1
-    labels: { role: workers }
-    tags:
-      k8s.io/cluster-autoscaler/enabled: "true"
-      k8s.io/cluster-autoscaler/eks-cluster-capstone: "shared"
-    instancesDistribution:
-      instanceTypes:
-        - t2.medium
-    desiredCapacity: 0
-    minSize: 0
-    maxSize: 1
-    subnets:
-      - public-net-captsone-a
   - name: pub-nodegroup-capstone-a-2
     labels: { role: workers }
     taints:
-      nodeapp: "true:NoSchedule"    
+      - key: nodeapp
+        value: "true"
+        effect: NoSchedule 
     tags:
       k8s.io/cluster-autoscaler/enabled: "true"
       k8s.io/cluster-autoscaler/eks-cluster-capstone: "shared"

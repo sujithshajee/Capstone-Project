@@ -13,15 +13,21 @@
     vars.tf
     vpc.tf
 
-- addons
+- eks-cls-config
+    - addons
+    - cluster.yml -  eks configuration
+    - nodegroup.yml - eks nodegroup configuration
 
-- screenshots
+- screenshots -  screenshots for different tasks and subtasks
 
-- scripts
+- scripts -  Set up ec2 instance with required tools
 
-- upg-loadme-app
+- upg-loadme-app -  node js app files with Dockerfile
 
-- upg-loadme-manifests
+- deployment files 
+    - upg-loadme
+    - redis-server
+    - redis-cli
 
 
 
@@ -48,7 +54,7 @@ Note the output variables at the end of the script execution
 
 ```
 * Navigate to eksctl-config folder (cd eksctl-config)
-* Edit cluster.yaml and cluster-new-node-group.yaml and update below lines with output from terraform script
+* Edit cluster.yaml and nodegroup.yaml and update below lines with output from terraform script
     Line 10: VPC ID
     Line 14: public subnet 1 ID
     Line 17: public subnet 2 ID
@@ -82,16 +88,65 @@ Note the output variables at the end of the script execution
     docker push <<repo ID>>.dkr.ecr.us-east-1.amazonaws.com/app:latest
 * Add Create a new nodegroup using eksctl
     Navigate to eksctl-config folder (cd eksctl-config)
-    Review cluster-new-node-group.yaml and ensure below lines are updated with output from terraform script
+    Review nodegroup.yaml and ensure below lines are updated with output from terraform script
         Line 10: VPC ID
         Line 14: public subnet 1 ID
         Line 17: public subnet 2 ID
         Line 21: private subnet 1 ID
         Line 24: private subnet 2 ID
-    Run command 'eksctl create cluster -f cluster-new-node-group.yaml' and wait for the node group creation to be complete
+    Run command ' eksctl create nodegroup --config-file=nodegroup.yaml' and wait for the node group creation to be complete
 * Create demo namespace by using command 'kubectl create ns demo'
+* Navigate to deployment-files/upg-loadme folder from project root and update upg-loadme.yaml line 23 with <<repo ID>>
+* Run command to deploy the application
+    kubectl apply -f . 
+* Run command to check status of deployment
+    kubectl get all -n demo && kubectl get ingress -n demo
+* Once all pods are running, run below command to check if application is up and running 
+    curl $(kubectl get ingress -n demo --no-headers | awk "{print \$4}") 
 ```    
 
+## Task 3: Deploy Redis server on Kubernetes
+```  
+* Navigate to deployment-files/redis-server folder from project root 
+* Run command to deploy the redis-server
+    kubectl apply -f . 
+* Run command to check status of deployment
+    kubectl get all -n demo 
+* Navigate to deployment-files/redis-cli folder from project root 
+* Run command to deploy the redis-cli
+    kubectl apply -f . 
+* Run command to check status of deployment
+    kubectl get all -n demo 
+* Run command to get redis-cli pod name  -- kubectl get pods -n demo | grep redis-cli | awk '{print$1}'   
+* Run command to exec into redis-cli after replacing redis-cli pod name --  kubectl exec -it -n demo <<redis-cli-pod-name>> -- sh
+* Run below commands in the pod to set the key value pair
+    redis-cli -h redis -p 6379 SET foo 1
+    redis-cli -h redis -p 6379 GET foo
+* Run command to delete redis-server pod   -- kubectl delete pods -n demo redis-0 --force
+* Run command to check if redis-server pod is back up  -- kubectl get pods -n demo
+* Run command to exec into redis-cli after replacing redis-cli pod name --  kubectl exec -it -n demo <<redis-cli-pod-name>> -- sh
+* Run below commands in the pod to set the key value pair
+    redis-cli -h redis -p 6379 GET foo
+```  
+
+## Task 4: Test auto scaling of the application
+```  
+* Run command to check HPA - kubectl get hpa -n demo
+* Install prometheus
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo update
+    helm install prometheus prometheus-community/prometheus
+* Check if all pods and services are up
+    kubectl get pods && kubectl get svc 
+* Port forward and access the promethues UI
+    kubectl port-forward service/prometheus-server 8088:80
+    Open browser and browse url http://localhost:8088
+* Run below commands to initiate load test
+    kubectl get ingress -n demo
+    ab -n1000 -c10 'http://<INSERT-LB-DNS>/load?scale=100'
+* Run below commands to monitor hpa during test
+    kubectl get hpa -n demo
+```  
 
 ## To destroy the setup run below commands
 ```  

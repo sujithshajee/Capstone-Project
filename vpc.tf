@@ -1,7 +1,6 @@
 ####################################################################################################
 # Internet VPC
 ####################################################################################################
-# SubTask-2
 resource "aws_vpc" "main" {
   cidr_block           = var.CIDR_BLOCK["vpc"]
   instance_tenancy     = "default"
@@ -16,7 +15,6 @@ resource "aws_vpc" "main" {
 ####################################################################################################
 # Public subnet 1
 ####################################################################################################
-# SubTask-2
 resource "aws_subnet" "main-public-1" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.CIDR_BLOCK["subnet_public_one"]
@@ -31,7 +29,6 @@ resource "aws_subnet" "main-public-1" {
 ####################################################################################################
 # Public subnet 2
 ####################################################################################################
-# SubTask-2
 resource "aws_subnet" "main-public-2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.CIDR_BLOCK["subnet_public_two"]
@@ -46,7 +43,6 @@ resource "aws_subnet" "main-public-2" {
 ####################################################################################################
 # Private subnet 1
 ####################################################################################################
-# SubTask-2
 resource "aws_subnet" "main-private-1" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.CIDR_BLOCK["subnet_private_one"]
@@ -61,7 +57,6 @@ resource "aws_subnet" "main-private-1" {
 ####################################################################################################
 # Public subnet 2
 ####################################################################################################
-# SubTask-2
 resource "aws_subnet" "main-private-2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.CIDR_BLOCK["subnet_private_two"]
@@ -76,7 +71,6 @@ resource "aws_subnet" "main-private-2" {
 ####################################################################################################
 # Internet GW
 ####################################################################################################
-# SubTask-2
 resource "aws_internet_gateway" "main-gw" {
   vpc_id = aws_vpc.main.id
   tags = {
@@ -87,7 +81,6 @@ resource "aws_internet_gateway" "main-gw" {
 ####################################################################################################
 # Route Table
 ####################################################################################################
-# SubTask-2
 resource "aws_route_table" "main-public" {
   vpc_id = aws_vpc.main.id
   route {
@@ -99,7 +92,6 @@ resource "aws_route_table" "main-public" {
 ####################################################################################################
 # Route Associations  - public
 ####################################################################################################
-# SubTask-2
 resource "aws_route_table_association" "main-public-1-a" {
   subnet_id      = aws_subnet.main-public-1.id
   route_table_id = aws_route_table.main-public.id
@@ -115,7 +107,6 @@ resource "aws_route_table_association" "main-public-2-a" {
 ####################################################################################################
 # NAT Gateway assocaited 
 ####################################################################################################
-# SubTask-2
 resource "aws_eip" "nat" {
   vpc = true
 }
@@ -137,7 +128,6 @@ resource "aws_route_table" "main-private" {
 ####################################################################################################
 # Route Associations  - private
 ####################################################################################################
-# SubTask-2
 resource "aws_route_table_association" "main-private-1-a" {
   subnet_id      = aws_subnet.main-private-1.id
   route_table_id = aws_route_table.main-private.id

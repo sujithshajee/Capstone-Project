@@ -20,7 +20,7 @@ spec:
       containers:
         - name: upg-loadme
           # update image id (manual or via jenkins)
-          image: {{DOCKER_IMAGE}}
+          image: <<repoID>>.dkr.ecr.us-east-1.amazonaws.com/app:latest
           # limiting cpu & mem usage of a pod
           resources:
             requests:
